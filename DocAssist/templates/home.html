@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Recorder</title>
+
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        nav{
+            padding: 10px;
+            display: flex;
+            height: 20vh;
+            align-items: center;
+        }
+        #logo{
+            height: 100px;
+            width: 300px;
+        }
+
+        #profile{
+            margin-left: auto;
+        }
+
+        #profile > img{
+            border-radius: 50%;
+            height: 50px;
+            width: 50px;
+        }
+
+        #profile > span{
+            font-size: 1.5rem;
+            position: relative;
+            bottom: 15px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .record-btn{
+            border: none;
+            padding: 8px 12px;
+            background: green;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .send-btn{
+            border: none;
+            padding: 8px 12px;
+            background: lightblue;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        td:nth-child(1){
+            width: 100px;
+            text-align: center;
+        }
+
+        td:nth-child(2){
+            width: 100px;
+            text-align: center;
+        }
+
+        td:nth-child(3){
+            width: 300px;
+            text-align: center;
+        }
+
+        td:nth-child(4){
+            width: 100px;
+            text-align: center;
+        }
+
+        td:nth-child(5){
+            width: 200px;
+            text-align: center;
+        }
+
+        td:nth-child(6){
+            width: 100px;
+            text-align: center;
+        }
+
+        td:nth-child(7){
+            width: 150px;
+            text-align: center;
+        }
+
+        td:nth-child(8){
+            width: 150px;
+            text-align: center;
+        }
+
+        tr{
+         background-color: #fff;
+        border: 2px solid #000;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+        }
+
+        tr {
+            margin-bottom: 10px; /* Adjust the margin as needed */
+        }
+
+        .patient-img{
+            border-radius: 50%;
+            height: 50px;
+            width: 50px;
+        }
+
+    </style>
+
+</head>
+<body>
+    <!-- <button id="startRecording">Start Recording</button>
+    <button id="stopRecording" disabled>Stop Recording</button>
+    <button id="sendToBackend" disabled>Send to Backend</button>
+    <audio id="audioPlayer" controls></audio> -->
+    <nav>
+        <img id="logo" src="{{ url_for('static', filename='/images/docAssist_logo.png') }}" alt="DocAssist Logo">
+        <div id="profile">
+            <img src="{{ url_for('static', filename='/images/profile.jpeg') }}" alt="">
+            <span>Dr. Junaid</span>
+        </div>
+    </nav>
+    <main>
+        <h1 style="padding: 20px;">Appointments :</h1>
+        <div style="width: 100%;display: flex;justify-content: center;">
+            <div class="appointments">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Appointment ID</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Phone No</th>
+                            <th>Timing</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="{{ url_for('static', filename='/images/gladys.jpg') }}" alt="patient-img" class="patient-img"></td>
+                            <td>#1234</td>
+                            <td>Gladys Gince</td>
+                            <td>21</td>
+                            <td>100</td>
+                            <td>10-11 AM</td>
+                            <td><button class="record-btn">Record</button></td>
+                            <td><button class="send-btn">Send</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let mediaRecorder;
+            let chunks = [];
+
+            const startRecordingBtn = document.getElementById('startRecording');
+            const stopRecordingBtn = document.getElementById('stopRecording');
+            const sendToBackendBtn = document.getElementById('sendToBackend');
+            const audioPlayer = document.getElementById('audioPlayer');
+
+            const handleSuccess = (stream) => {
+                mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        chunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(blob);
+                    audioPlayer.src = audioUrl;
+
+                    sendToBackendBtn.disabled = false;
+                };
+
+                startRecordingBtn.addEventListener('click', () => {
+                    mediaRecorder.start();
+                    startRecordingBtn.disabled = true;
+                    stopRecordingBtn.disabled = false;
+                    sendToBackendBtn.disabled = true;
+                });
+
+                stopRecordingBtn.addEventListener('click', () => {
+                    mediaRecorder.stop();
+                    startRecordingBtn.disabled = false;
+                    stopRecordingBtn.disabled = true;
+                });
+
+                sendToBackendBtn.addEventListener('click', () => {
+                    // Assuming your backend endpoint is '/upload'
+                    fetch('/', {
+                        method: 'POST',
+                        body: chunks[0], // Sending the first chunk (you might want to send all chunks)
+                        headers: {
+                            'Content-Type': 'audio/wav',
+                        },
+                    })
+                    .then(response => {
+                        // Handle the response from the backend
+                        console.log('Audio sent to backend successfully:', response);
+                    })
+                    .catch(error => {
+                        console.error('Error sending audio to backend:', error);
+                    });
+                });
+            };
+
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(handleSuccess)
+                .catch((error) => console.error('Error accessing microphone:', error));
+        });
+    </script> -->
+</body>
+</html>
