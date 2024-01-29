@@ -1,10 +1,15 @@
 import os
+""" from pyannote.core import Segment
+from pyannote.core import notebook
+from pyannote.audio.pipelines import SpeakerDiarization
+import torchaudio """
 
 os.environ["FFMPEG_PATH"] = "C:/ffmpeg"
 
 try:
     print('[Importing Models & Libraries - Pending] . . . ')
-    from model import whisper,emotion,segmentation
+    from model import pipe
+    # from model import whisper,emotion,segmentation
     print('[Whisper Imported] . . . ')
     from transformers import pipeline
     print('[Importing Models & Libraries - Complete] . . . ')
@@ -12,21 +17,24 @@ except Exception as e:
     print("Exception : ",e)
 
 def toText(audio):
-    text = whisper(audio)
+    # text = whisper(audio)
+    text = pipe(audio)
     return text
 
-def text_emotion(audio):
+""" def text_emotion(audio):
     sentiment = emotion(audio)
-    return sentiment
-
+    return sentiment """    
+""" 
 def speaker_segmentation(audio):
     seg = segmentation(audio)
-    return seg
+    return seg  """
 
-audio = './convo.wav'
+audio = './output.wav'
 text = toText(audio)
-sentiment = text_emotion(audio)
-seg = speaker_segmentation(audio)
+""" sentiment = text_emotion(audio)"""
+# waveform, sample_rate = torchaudio.load(audio)
+# diarization = speaker_segmentation(audio) 
+# diarization = speaker_segmentation({'uri': 'filename', 'audio': waveform.numpy()})
 print('Text : ',text)
-print('Sentiment : ',sentiment)
-print('Speaker Segmentation : ',seg)
+# print('Sentiment : ',sentiment)
+# print('Speaker Segmentation : ',seg)

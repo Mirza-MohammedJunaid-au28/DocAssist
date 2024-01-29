@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Recorder</title>
+  <style>
+    button {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<button id="startButton" onclick="startRecording()">Start Recording</button>
+<button id="pauseButton" onclick="pauseRecording()" disabled>Pause Recording</button>
+<button id="resumeButton" onclick="resumeRecording()" disabled>Resume Recording</button>
+<button id="saveButton" onclick="saveRecording()" disabled>Save Recording</button>
+
+<audio controls id="audioPlayer"></audio>
+
+<script>
+  let mediaRecorder;
+  let recordedChunks = [];
+  let isRecording = false;
+
+  const startButton = document.getElementById("startButton");
+  const pauseButton = document.getElementById("pauseButton");
+  const resumeButton = document.getElementById("resumeButton");
+  const saveButton = document.getElementById("saveButton");
+
+  async function startRecording() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        recordedChunks.push(event.data);
+      }
+    };
+
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, { type: "audio/wav" });
+      const url = URL.createObjectURL(blob);
+      audioPlayer.src = url;
+      recordedChunks = [];
+      isRecording = false;
+      toggleButtons();
+    };
+
+    mediaRecorder.start();
+    isRecording = true;
+    toggleButtons();
+  }
+
+  function pauseRecording() {
+    mediaRecorder.pause();
+    isRecording = false;
+    toggleButtons();
+  }
+
+  function resumeRecording() {
+    mediaRecorder.resume();
+    isRecording = true;
+    toggleButtons();
+  }
+
+  function saveRecording() {
+    mediaRecorder.stop();
+    toggleButtons();
+    // Implement logic to send the recorded data to the backend
+    // For example, you can send the blob data using XMLHttpRequest or Fetch API
+  }
+
+  function toggleButtons() {
+    startButton.disabled = isRecording;
+    pauseButton.disabled = !isRecording;
+    resumeButton.disabled = !isRecording;
+    saveButton.disabled = !isRecording;
+  }
+</script>
+
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Recording Example</title>
+    <style>
+        .start-btn,
+        .pause-btn,
+        .resume-btn {
+            margin: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Temperature</th>
+                <th>Appointment Time</th>
+                <th>Actions</th>
+                <th>Save</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><img src="{{ url_for('static', filename='/images/gladys.jpg') }}" alt="patient-img"
+                        class="patient-img"></td>
+                <td>#1234</td>
+                <td>Gladys Gince</td>
+                <td>21</td>
+                <td>100</td>
+                <td>10:00 - 10:15 AM</td>
+                <td id="btns"><button class="start-btn">Start</button></td>
+                <td class="save-col send-btn-col"><button class="send-btn" onclick="saveRecording()">Save</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
+
+        const startButton = document.getElementById("record-btn");
+        const pauseButton = document.getElementById("pause-btn");
+        const resumeButton = document.getElementById("resume-btn");
+        const sendButton = document.getElementById("send-btn");
+
+        document.getElementsByClassName('start-btn')[0].addEventListener('click', () => {
+            document.getElementById('btns').removeChild(document.getElementById('btns').firstChild);
+            document.getElementById('btns').innerHTML = '<button class="record-btn" onclick="startRecording(this)">Record</button>';
+        })
+
+        document.getElementsByClassName('record-btn')[0].addEventListener('click', () => {
+            document.getElementById('btns').removeChild(document.getElementById('btns').firstChild);
+            document.getElementById('btns').innerHTML = '<button class="pause-btn" onclick="startRecording(this)">Record</button>';
+        })
+
+        document.getElementsByClassName('pause-btn')[0].addEventListener('click', () => {
+            document.getElementById('btns').removeChild(document.getElementById('btns').firstChild);
+            document.getElementById('btns').innerHTML = '<button class="resume-btn" onclick="startRecording(this)">Record</button>';
+        })
+
+       /*  async function startRecording() {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+
+            mediaRecorder.onstop = () => {
+                isRecording = false;
+                toggleButtons();
+            };
+
+            mediaRecorder.start();
+            isRecording = true;
+            toggleButtons();
+        }
+ */
+    </script>
+</body>
+
+</html> -->

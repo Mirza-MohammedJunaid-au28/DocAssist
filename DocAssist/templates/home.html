@@ -1,38 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Recorder</title>
 
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        nav{
+
+        nav {
             padding: 10px;
             display: flex;
             height: 20vh;
             align-items: center;
         }
-        #logo{
+
+        #logo {
             height: 100px;
             width: 300px;
         }
 
-        #profile{
+        #profile {
             margin-left: auto;
         }
 
-        #profile > img{
+        #profile>img {
             border-radius: 50%;
             height: 50px;
             width: 50px;
         }
 
-        #profile > span{
+        #profile>span {
             font-size: 1.5rem;
             position: relative;
             bottom: 15px;
@@ -40,7 +43,13 @@
             margin-right: 10px;
         }
 
-        .record-btn{
+        main {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .record-btn {
             border: none;
             padding: 8px 12px;
             background: green;
@@ -49,7 +58,7 @@
             cursor: pointer;
         }
 
-        .send-btn{
+        .send-btn {
             border: none;
             padding: 8px 12px;
             background: lightblue;
@@ -58,69 +67,129 @@
             cursor: pointer;
         }
 
-        td:nth-child(1){
+        .start-btn {
+            border: none;
+            padding: 8px 12px;
+            background: green;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        td:nth-child(1) {
             width: 100px;
             text-align: center;
         }
 
-        td:nth-child(2){
+        td:nth-child(2) {
             width: 100px;
             text-align: center;
         }
 
-        td:nth-child(3){
+        td:nth-child(3) {
             width: 300px;
             text-align: center;
         }
 
-        td:nth-child(4){
+        td:nth-child(4) {
             width: 100px;
             text-align: center;
         }
 
-        td:nth-child(5){
+        td:nth-child(5) {
             width: 200px;
             text-align: center;
         }
 
-        td:nth-child(6){
+        td:nth-child(6) {
             width: 100px;
             text-align: center;
         }
 
-        td:nth-child(7){
+        td:nth-child(7) {
             width: 150px;
             text-align: center;
         }
 
-        td:nth-child(8){
+        td:nth-child(8) {
             width: 150px;
             text-align: center;
         }
 
-        tr{
-         background-color: #fff;
-        border: 2px solid #000;
+        tr {
+            background-color: #fff;
+            border: 2px solid #000;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #dddddd;
             padding: 8px;
         }
 
         tr {
-            margin-bottom: 10px; /* Adjust the margin as needed */
+            margin-bottom: 10px;
+            /* Adjust the margin as needed */
         }
 
-        .patient-img{
+        .patient-img {
             border-radius: 50%;
             height: 50px;
             width: 50px;
         }
 
+        .save-col {
+            width: 150px;
+            height: 60px;
+            display: none;
+        }
+
+        .send-btn-col {
+            height: 72px;
+            /* display: flex; */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .home-image {
+            height: 200px;
+            width: 200px;
+            border-radius: 50%;
+            display: block;
+            margin: auto;
+        }
+
+        #profile-card {
+            padding-bottom: 50px;
+            /* display: flex; */
+            padding: 10px;
+            background-color: #39A7FF;
+            color: #fff;
+            margin: 30px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        #left-card {
+            width: 35%;
+        }
+
+        #right-card {
+            width: 65%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        p {
+            margin: 5px 0;
+            font-weight: 600;
+        }
     </style>
 
 </head>
+
 <body>
     <!-- <button id="startRecording">Start Recording</button>
     <button id="stopRecording" disabled>Stop Recording</button>
@@ -134,7 +203,7 @@
         </div>
     </nav>
     <main>
-        <h1 style="padding: 20px;">Appointments :</h1>
+        <h1 style="padding: 30px; font: size 1.2rem;">Appointments :</h1>
         <div style="width: 100%;display: flex;justify-content: center;">
             <div class="appointments">
                 <table>
@@ -147,24 +216,159 @@
                             <th>Phone No</th>
                             <th>Timing</th>
                             <th></th>
-                            <th></th>
+                            <th class="save-col"></th>
+                            <th class="send-col"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><img src="{{ url_for('static', filename='/images/gladys.jpg') }}" alt="patient-img" class="patient-img"></td>
+                            <td><img src="{{ url_for('static', filename='/images/gladys.jpg') }}" alt="patient-img"
+                                    class="patient-img"></td>
                             <td>#1234</td>
                             <td>Gladys Gince</td>
                             <td>21</td>
                             <td>100</td>
-                            <td>10-11 AM</td>
-                            <td><button class="record-btn">Record</button></td>
-                            <td><button class="send-btn">Send</button></td>
+                            <td>10:00 - 10:15 AM</td>
+                            <!-- <td id="btns"><button class="record-btn">Record</button></td> -->
+                            <td id="btns"><button class="start-btn">Start</button></td>
+                            <td class="save-col send-btn-col"><button class="send-btn">Save</button></td>
+                            <td class="send-col"> <input type="file" accept="audio/*" id="audioInput" onchange="handleFileSelect()"> </td>
                         </tr>
                     </tbody>
                 </table>
 
             </div>
+        </div>
+        <div id="profile-card" style="width: 69%;margin:30px auto;">
+            <div id="left-card">
+                <img alt="image" src="{{ url_for('static', filename='/images/gladys_1.jpg') }}" class="home-image" />
+                <div style="padding-left:10px;">
+                    <p style="text-align:center;font-size:1.2rem;">Patient Data</p>
+                    <p>Name: Gladys Gince</p>
+                    <p>Gender: Female</p>
+                    <p>Phone No: 9820756625</p>
+                    <p>Languages Known: English, Hindi, Malayalam</p>
+                    <p>Height: 5'3</p>
+                    <p>Weight: 75kg</p>
+                    <p>Allergies: None</p>
+                    <p>Blood Pressure : -</p>
+                    <p>Diabetes: -</p>
+                </div>
+            </div>
+            <div id="right-card">
+                <h1>History</h1>
+                <table style="color: #39A7FF;">
+                    <thead>
+                        <tr>
+                            <th>Sr No</th>
+                            <th>Appointment Id</th>
+                            <th>Last Time Visited</th>
+                            <th style="width: 200px;">Symptoms</th>
+                            <th style="width: 200px;">Medicine Recommended</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>#712 </td>
+                            <td>12-05-2023</td>
+                            <!-- <td style="width: 200px;">Headache</td> -->
+                            <!-- <td style="width: 200px;">
+                                Tb. Flunarizine
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- <link href="./profile.css" rel="stylesheet" /> -->
+            <!-- <div class="home-container">
+                  <div class="home-container01"></div>
+                  <div class="home-container02">
+                    <span class="home-text">
+                      <span>Languages Known:</span>
+                      <br />
+                      <span>English, Hindi, Malayalam</span>
+                      <br />
+                    </span>
+                    <span class="home-text05">
+                      <span class="home-text06">Height:</span>
+                      <br />
+                      <span>5 feet 3 inches</span>
+                      <br />
+                    </span>
+                    <span class="home-text10">
+                      <span class="home-text11">Weight:</span>
+                      <br />
+                      <span>75kg</span>
+                      <br />
+                    </span>
+                    <span class="home-text15">
+                      <span class="home-text16">Allergies:</span>
+                      <br />
+                      <span>None</span>
+                      <br />
+                    </span>
+                    <span class="home-text20">
+                      <span>Predicted Disease:</span>
+                      <br />
+                      <span>Viral Fever</span>
+                      <br />
+                    </span>
+                    <span class="home-text25">
+                      <span class="home-text26">Symptoms:</span>
+                      <br />
+                      <span>Fever, Sore throat, Shivering</span>
+                      <br />
+                    </span>
+                    <span class="home-text30">
+                      <span class="home-text31">Medication:</span>
+                      <br />
+                      <span>Dolo 650</span>
+                      <br />
+                    </span>
+                    <span class="home-text35">
+                      <span class="home-text36">Tests:</span>
+                      <br />
+                      <span>Blood Test</span>
+                      <br />
+                    </span>
+                  </div>
+                  <div class="home-container03">
+                    <div class="home-container04"></div>
+                    <div class="home-container05"></div>
+                    <div class="home-container06">
+                      <span class="home-text40">Age: 21</span>
+                    </div>
+                    <div class="home-container07"></div>
+                  </div>
+                  <div class="home-container08">
+                    <span class="home-text41">Gender: Female</span>
+                    <span class="home-text42">DOB: 01/09/2002</span>
+                    <div class="home-container09">
+                      <div class="home-container10">
+                        <div class="home-container11">
+                          <span class="home-text43">Token No.</span>
+                          <span class="home-text44">Name</span>
+                          <span class="home-text45">Email</span>
+                          <span class="home-text46">Phone No.</span>
+                        </div>
+                        <div class="home-container12"></div>
+                        <div class="home-container13"></div>
+                        <div class="home-container14"></div>
+                        <div class="home-container15"></div>
+                      </div>
+                      <div class="home-container16"></div>
+                    </div>
+                    <span class="home-text47">Doctor</span>
+                    <span class="home-text48">1234</span>
+                    <span class="home-text49">Gladys Gince</span>
+                    <span class="home-text50">gladys.gince@gmail.com</span>
+                    <span class="home-text51">9820756625</span>
+                    <span class="home-text52">Dr. Goyal</span>
+                  </div>
+                  
+                </div> -->
+
         </div>
     </main>
 
@@ -233,4 +437,66 @@
         });
     </script> -->
 </body>
+<script>
+    const start_btn = document.getElementsByClassName('start-btn')[0];
+
+    start_btn.addEventListener('click', () => {
+        document.getElementById('btns').removeChild(document.getElementById('btns').firstChild);
+        document.getElementById('btns').innerHTML = '<button class="record-btn">Record</button>';
+        document.getElementsByClassName('save-col')[0].style.display = "block";
+        document.getElementsByClassName('save-col')[1].style.display = "flex";
+        document.getElementById('profile-card').style.display = "flex";
+    })
+
+    function handleFileSelect() {
+    const fileInput = document.getElementById('audioInput');
+    const selectedFile = fileInput.files[0];
+
+    if (selectedFile) {
+      // Do something with the selected audio file
+      console.log('Selected Audio File:', selectedFile);
+
+      // You can read the file using FileReader if needed
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const audioData = event.target.result;
+        // Do something with the audio data
+        console.log('Audio Data:', audioData);
+        sendAudioToServer(audioData);
+      };
+      reader.readAsArrayBuffer(selectedFile);
+    } else {
+      console.log('No file selected.');
+    }
+  } 
+
+
+  function sendAudioToServer(audioData) {
+    // Replace '/audio' with the actual endpoint URL
+    const endpoint = '/audio';
+
+    // Assuming the server accepts binary data, adjust headers accordingly
+    fetch(endpoint, {
+      method: 'POST',
+      body: audioData,
+      headers: {
+        'Content-Type': 'audio/wav', // Adjust based on the audio file format
+        // Add any other headers if needed
+      },
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json(); // Adjust based on the expected response format
+    })
+    .then(data => {
+      console.log('Server response:', data);
+    })
+    .catch(error => {
+      console.error('Error sending audio to server:', error);
+    });
+  }
+
+</script>
 </html>
